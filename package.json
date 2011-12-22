@@ -5,6 +5,5 @@
 , "author" : "Kenneth Koontz <kenneth.koontz@gmail.com>"
 , "main" : "./lib/npm.js"
 , "dependencies" :
-  { "express": "*"
-  , "supervisor": "*"}
+  { "express": "*" }
 }
