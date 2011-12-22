@@ -1,0 +1,17 @@
+body {
+    padding-top: 40px;
+    background-color: #eee;
+}
+
+input {
+    height: 28px;
+}
+
+.content .span16 {
+    min-height: 600px;
+}
+textarea.send-message {
+    resize: none;
+    width: 700px;
+    height: 60px;
+}
