@@ -1,4 +1,5 @@
 var app = require('express').createServer()
+  , tmpl = require('jqtpl')
   , redis = require("redis")
   , client = redis.createClient();
 
