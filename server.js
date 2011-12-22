@@ -1,14 +1,24 @@
 var app = require('express').createServer()
-  , tmpl = require('jqtpl')
+  , express = require('express')
+  , jqtpl = require('jqtpl')
   , redis = require("redis")
   , client = redis.createClient();
 
+app.set("view engine", "html");
+app.register(".html", require("jqtpl").express);
+app.use("/javascripts", express.static(__dirname + '/javascripts'));
+app.use("/styles", express.static(__dirname + '/styles'));
+
 client.on("error", function (err) {
     console.log("Error " + err);
+    asdfasf
 });
 
 app.get('/', function(req, res) {
-    res.send('render page');
+    app.set("view options", {
+        layout: false
+    });
+    res.render('room');
 });
 
 app.listen(8000);
