@@ -2,7 +2,9 @@ var app = require('express').createServer()
   , express = require('express')
   , jqtpl = require('jqtpl')
   , redis = require("redis")
-  , client = redis.createClient();
+  , client = redis.createClient()
+  , publisher = redis.createClient()
+  , subscriber = redis.createClient();
 
 app.set("view engine", "html");
 app.register(".html", require("jqtpl").express);
