@@ -1,0 +1,10 @@
+{ "name" : "squawk"
+, "description" : "Node-based chatroom"
+, "version" : "0.1.0"
+, "config" : { "publishtest" : false }
+, "author" : "Kenneth Koontz <kenneth.koontz@gmail.com>"
+, "main" : "./lib/npm.js"
+, "dependencies" :
+  { "express": "*"
+  , "supervisor": "*"}
+}
