@@ -7,5 +7,6 @@
 , "dependencies" :
   { "express": "*"
   , "jqtpl": "*"
-  , "redis": "*" }
+  , "redis": "*"
+  , "socket.io": "*" }
 }
