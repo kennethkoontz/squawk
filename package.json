@@ -6,7 +6,9 @@
 , "main" : "./lib/npm.js"
 , "dependencies" :
   { "express": "*"
-  , "jqtpl": "*"
+  , "mongoose": "*"
   , "redis": "*"
-  , "socket.io": "*" }
+  , "socket.io": "*"
+  , "connect-redis": "*"
+  , "jade": "*" }
 }
