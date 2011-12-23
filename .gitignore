@@ -1,3 +1,7 @@
 # NPM Modules #
 ###############
 node_modules/
+
+# Editor Files #
+################
+*~

@@ -1,4 +1,0 @@
-var socket = io.connect(location.hostname)
-  , squawkModel = {}
-
-ko.binding
