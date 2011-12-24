@@ -1,8 +1,17 @@
 .topbar
-  .fill
+  .topbar-inner
     .container
       a.brand(href="#") squawk
-      form.pull-right(action="/sessions", method="POST")
-        input#emaillogin.input-small(name="emaillogin", type="text", placeholder="email")
-        input#passwordlogin.input-small(name="passwordlogin", type="password", placeholder="password")
-        button.btn(type="submit") Sign in
+      - if (session.user || request.url === '/sessions')
+        .pull-right
+          ul.nav
+            li#user
+              p= 'logged in: ' + session.user
+            li#logout
+              a(href="/session/destroy") logout
+      - else
+        form.pull-right(action="/sessions", method="POST")
+          input#email.input-small(name="email", type="text", placeholder="email")
+          input#password.input-small(name="password", type="password", placeholder="password")
+          input#redirect(name="redir", type="hidden", value="/room")
+          button.btn(type="submit") Sign in

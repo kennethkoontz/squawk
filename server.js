@@ -39,9 +39,13 @@ app.dynamicHelpers(
             return req.session;
         },
 
+        request: function(req, res) {
+            return req;
+        },
+
         flash: function(req, res) {
             return req.flash();
-        }
+        },
     }
 );
 
@@ -84,11 +88,10 @@ app.post('/register', function(req, res) {
                 // If there is an error here we should raise a 500 error.
                 console.log(err);
             });
+            req.session.user = req.body.email;
             res.redirect('/room');
-        console.log('created', user);
         } else {
             res.render('register');
-            console.log('user', user, 'already created');
         }
     });
 });
@@ -99,7 +102,14 @@ app.get('/room', requiresLogin, function(req, res) {
 
 /* Sessions */
 app.get('/sessions/new', function(req, res) {
-    res.render('sessions/new', {locals: {redir: req.query.redir}});
+    res.render('sessions/new', {locals: {redir: req.query.redir || req.body.redir}});
+});
+
+app.get('/session/destroy', function(req, res) {
+    req.session.destroy(function(err) {
+        console.log(err);
+        res.redirect('/');
+    });
 });
 
 app.post('/sessions', function(req, res) {
@@ -107,7 +117,7 @@ app.post('/sessions', function(req, res) {
         if (email) {
             console.log(req.body.redir);
             req.session.user = email;
-            res.redirect(req.body.redir || '/');
+            res.redirect(req.body.redir || '/room');
         } else {
             req.flash('warn', 'oops! did you type in your email and/or password correctly?');
             res.render('sessions/new', {locals: {redir: req.body.redir}});
