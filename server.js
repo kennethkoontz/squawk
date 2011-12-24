@@ -1,4 +1,5 @@
 var app = require('express').createServer()
+  , auth = require('./auth')
   , express = require('express')
   , jade = require('jade')
   , redis = require("redis")
@@ -32,9 +33,29 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({ secret: 'secretpassword', store: new RedisStore}));
 
+app.dynamicHelpers(
+    {
+        session: function(req, res) {
+            return req.session;
+        },
+
+        flash: function(req, res) {
+            return req.flash();
+        }
+    }
+);
+
 client.on("error", function (err) {
     console.log("Error " + err);
 });
+
+function requiresLogin(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/sessions/new?redir=' + req.url);
+    }
+};
 
 io.sockets.on('connection', function (socket) {
     subscriber.subscribe('channel');
@@ -52,25 +73,46 @@ app.get('/', function(req, res) {
     res.render('register');
 });
 
-app.post('/room', function(req, res) {
-    console.log(req.body.email);
-    User.find({ email: req.body.email}, function (err, doc) {
+app.post('/register', function(req, res) {
+    User.find({ email: req.body.email}, function (err, record) {
         if (err) {
             console.log(err);
         }
-        if (doc.length === 0) {
+        if (record.length === 0) {
             var user = new User(req.body);
             user.save(function (err) {
                 // If there is an error here we should raise a 500 error.
                 console.log(err);
             });
-            res.render('room');
-	    console.log('created', user);
+            res.redirect('/room');
+        console.log('created', user);
         } else {
-            res.render('room');
-	    console.log('user', user, 'already created');
+            res.render('register');
+            console.log('user', user, 'already created');
         }
     });
 });
 
-app.listen(80);
+app.get('/room', requiresLogin, function(req, res) {
+    res.render('room');
+});
+
+/* Sessions */
+app.get('/sessions/new', function(req, res) {
+    res.render('sessions/new', {locals: {redir: req.query.redir}});
+});
+
+app.post('/sessions', function(req, res) {
+    auth.authenticate(req.body.email, req.body.password, function (err, email) {
+        if (email) {
+            console.log(req.body.redir);
+            req.session.user = email;
+            res.redirect(req.body.redir || '/');
+        } else {
+            req.flash('warn', 'oops! did you type in your email and/or password correctly?');
+            res.render('sessions/new', {locals: {redir: req.body.redir}});
+        } 
+    });
+});
+
+app.listen(8000);

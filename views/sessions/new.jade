@@ -1,0 +1,21 @@
+include ../layout
+.container
+  .space
+  .row
+    .offset4.span8.offset4
+      h1 login
+      - if (flash.warn)
+        .alert-message.block-message.error 
+          | <b>oops!</b> did you type in your <b>email and/or password</b> correctly?
+      form(action='/sessions', method='POST')
+        input(type='hidden', name='redir', value=redir)
+        p
+          label(for='email') email:
+          input(type='text', name='email', id='email')
+        p
+          label(for='password') password:
+          input(type='password', name='password', id='password')
+        p
+          label(for='xlInput')
+          .input
+            button#submit.btn.large.primary(type="submit", name="submit") login

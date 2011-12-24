@@ -1,8 +1,9 @@
 include layout
 .container
+  .space
   .row
-    .offset8
-      form(action="room", method="POST")
+    .offset4.span8.offset4
+      form(action="/room", method="POST")
         fieldset
           legend register
           .clearfix

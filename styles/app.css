@@ -8,3 +8,7 @@ textarea.send-message {
     width: 650px;
     height: 60px;
 }
+
+.space {
+    height: 100px;
+}
