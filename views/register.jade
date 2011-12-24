@@ -1,0 +1,31 @@
+include layout
+.container
+  .row
+    .offset8
+      form(action="room", method="POST")
+        fieldset
+          legend register
+          .clearfix
+            label(for="xlInput") email
+            .input
+              input#email.input-large(type="text", name="email")
+          .clearfix
+            label(for="xlInput") first name
+            .input
+              input#first.input-large(type="text", name="firstName")
+          .clearfix  
+            label(for="xlInput") last name
+            .input
+              input#last.input-large(type="text", name="lastName")
+          .clearfix
+            label(for="xlInput") password
+            .input
+              input#password.input-large(type="password", name="password")
+          .clearfix
+            label(for="xlInput") confirm 
+            .input
+              input#confirmpassword.input-large(type="password", name="second")
+          .clearfix
+            label(for="xlInput") 
+            .input
+              button#submit.btn.large.primary(type="submit") register now!

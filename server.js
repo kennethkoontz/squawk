@@ -49,10 +49,11 @@ io.sockets.on('connection', function (socket) {
 });
 
 app.get('/', function(req, res) {
-    res.render('layout');
+    res.render('register');
 });
 
 app.post('/room', function(req, res) {
+    console.log(req.body.email);
     User.find({ email: req.body.email}, function (err, doc) {
         if (err) {
             console.log(err);
@@ -63,11 +64,13 @@ app.post('/room', function(req, res) {
                 // If there is an error here we should raise a 500 error.
                 console.log(err);
             });
-            res.send('registered'+user);
+            res.render('room');
+	    console.log('created', user);
         } else {
-            res.send('user already registered');
+            res.render('room');
+	    console.log('user', user, 'already created');
         }
     });
 });
 
-app.listen(8000);
+app.listen(80);

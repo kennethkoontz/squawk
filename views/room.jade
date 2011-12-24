@@ -1,0 +1,18 @@
+include layout
+.container
+  .row
+    .span4
+      h3 whos here
+    .span12
+      div
+        h2 current room
+          small room description
+      div(data-bind="template: {name:'squawkTemplate', foreach: squawks}")
+      script#squawkTemplate(type="text/x-query-tmpl") 
+        p
+          span(data-bind="text: message")
+      div
+        p
+          textarea.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")
+        p
+          button.btn(data-bind="click: addSquawk") send
