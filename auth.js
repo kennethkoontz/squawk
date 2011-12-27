@@ -18,13 +18,14 @@ module.exports.authenticate = function(email, password, callback) {
             callback(err, null);
             return;
         }
-        var userEmail = record[0].email;
-        if (!userEmail) {
+        // No records returned, incorrect email.
+        if (record.length === 0) {
             callback(null, null);
             return;
         }
+        // Is password correct?
         if (record[0].password === password) {
-            callback(null, userEmail);
+            callback(null, record[0].email);
             return;
         }
         callback(null, null);

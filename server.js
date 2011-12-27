@@ -142,7 +142,6 @@ app.get('/session/destroy', function(req, res) {
 app.post('/sessions', function(req, res) {
     auth.authenticate(req.body.email, req.body.password, function (err, email) {
         if (email) {
-            console.log(req.body.redir);
             req.session.user = email;
             res.redirect(req.body.redir || '/room');
         } else {
