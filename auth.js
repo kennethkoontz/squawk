@@ -10,7 +10,7 @@ var UserModel = new Schema({
   , password: String
 });
 
-var User = mongoose.model('UserModel', UserModel);
+var User = mongoose.model('user', UserModel);
 
 module.exports.authenticate = function(email, password, callback) {
     User.find({email: email}, function (err, record) {

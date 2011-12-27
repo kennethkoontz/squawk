@@ -1,20 +1,19 @@
 include layout
 .container
   .row
-    .span4
+    .span3
       h3 whos here
-    .span12
+    .span13
       div
-        h2 current room
-          small room description
-      div(data-bind="template: {name:'squawkTemplate', foreach: squawks}")
-      script#squawkTemplate(type="text/x-query-tmpl") 
+        h3 current room <small>room description</small
+      div
         table
-          tr    
-            td(style='width: 40px')
-              span(data-bind="text: email")
-            td
-              span(data-bind="text: message")
+          tbody(data-bind="foreach: squawks")
+            tr    
+              td
+                div(data-bind="text: email")
+              td
+                div(data-bind="text: message").message-body
       div
         p
           textarea.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")

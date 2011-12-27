@@ -12,3 +12,10 @@ textarea.send-message {
 .space {
     height: 100px;
 }
+
+.user-body {
+}
+
+.message-body {
+    word-wrap: break-word;
+}
