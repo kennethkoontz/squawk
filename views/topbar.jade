@@ -7,6 +7,7 @@
           ul.nav
             li#user
               p= 'logged in: ' + session.user
+              input#email(name="email", type="hidden", value="#{session.user}")
             li#logout
               a(href="/session/destroy") logout
       - else

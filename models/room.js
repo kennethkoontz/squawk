@@ -1,5 +1,4 @@
-var socket = io.connect(location.hostname)
-  , squawkModel = {}
+var socket = io.connect(location.hostname);
 
 ko.bindingHandlers.addOnEnter = {
     init: function (element, valueAccessor, allBindingsAccessor, squawkModel) {
@@ -15,34 +14,46 @@ ko.bindingHandlers.addOnEnter = {
     }
 };
 
-socket.on('message', function(data) {
-    console.log(data);
-    squawkModel.squawks.push(JSON.parse(data));
-});
 
 $(document).ready(function () {
-    var squawk = function(username, message) {
-        this.username = username;
-        this.message = message;
+    function Squawk(data) {
+        this.email = ko.observable(data.user);
+        this.message = ko.observable(data.body); 
     }
 
-    squawkModel = {
-        squawks: ko.observableArray([]),
-        messageToAdd: ko.observable(""),
+    function squawkModel() {
+        var self = this;
+        self.squawks = ko.observableArray([]);
+        self.messageToAdd = ko.observable("");
 
-        addSquawk: function () {
-            // TODO: Have to figure out a way to grab the username.
-            var username = 'kenneth';
-            var message = this.messageToAdd();
+        self.addSquawk = function () {
+            var email = $('#email').val();
+            var message = self.messageToAdd();
             if (message) {
                 var data = {
-                    'username': username,
+                    'email': email,
                     'message': message
                 };
                 socket.send(JSON.stringify(data));
             }
-            this.messageToAdd("");
-        },
-    };
-    ko.applyBindings(squawkModel);
+            self.messageToAdd("");
+        };
+
+        self.updateSquawk = function(data) {
+            self.squawks.push({email: data.email, message: data.message});
+            self.messageToAdd("");
+        };
+
+        $.getJSON("/messages", function(allData) {
+            var mappedMessages = $.map(allData, function(item) { return new Squawk(item) });
+            self.squawks(mappedMessages);
+        });    
+    }
+    var squawk = new squawkModel();
+
+    socket.on('message', function(data) {
+        squawk.updateSquawk(JSON.parse(data));
+    });
+    
+    ko.applyBindings(squawk);
 });

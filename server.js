@@ -21,7 +21,15 @@ var UserModel = new Schema({
   , password: String
 });
 
-var User = mongoose.model('UserModel', UserModel);
+var MessageModel = new Schema({
+    id: ObjectId
+  , createdDate: { type: Date, default: Date.now }
+  , user: String
+  , body: String
+});
+
+var User = mongoose.model('user', UserModel);
+var Message = mongoose.model('message', MessageModel);
 
 app.set("view engine", "jade");
 app.set("view options", { layout: false });
@@ -70,6 +78,17 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('message', function (data) {
         publisher.publish('channel', data);
+        var json = JSON.parse(data);
+        var m = {
+            user: json.email,
+            body: json.message
+        }
+        message = new Message(m);
+        message.save(function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
     });
 });
 
@@ -86,7 +105,9 @@ app.post('/register', function(req, res) {
             var user = new User(req.body);
             user.save(function (err) {
                 // If there is an error here we should raise a 500 error.
-                console.log(err);
+                if (err) {
+                    console.log(err);
+                }
             });
             req.session.user = req.body.email;
             res.redirect('/room');
@@ -98,6 +119,12 @@ app.post('/register', function(req, res) {
 
 app.get('/room', requiresLogin, function(req, res) {
     res.render('room');
+});
+
+app.get('/messages', function(req, res) {
+    Message.find({}, {user:1, body:1, _id: 0}, function(err, doc) {
+        res.send(doc);
+    });
 });
 
 /* Sessions */
