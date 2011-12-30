@@ -70,14 +70,25 @@ function requiresLogin(req, res, next) {
 };
 
 io.sockets.on('connection', function (socket) {
-    subscriber.subscribe('channel');
+    subscriber.psubscribe('channel:room:1');
 
-    subscriber.on("message", function (channel, message) {
-        socket.send(message);
+    subscriber.on('pmessage', function (pattern, channel, message) {
+        if (message === 'update-userlist') {
+            client.SMEMBERS('room:1', function (err, members) {
+                var response = [];
+                members.forEach(function (item) {
+                    response.push({name: item});
+                });
+                socket.emit('update-userlist', response);
+            }); 
+        } else {
+            socket.send(message);
+        } 
     });
 
     socket.on('message', function (data) {
-        publisher.publish('channel', data);
+        publisher.publish('channel:room:1', data);
+        // Save to Mongo Database.
         var json = JSON.parse(data);
         var m = {
             user: json.email,
@@ -90,6 +101,20 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('set name', function (name) {
+        client.SADD('room:1', name, redis.print);
+        socket.set('user', name)
+        publisher.publish('channel:room:1', 'update-userlist');
+    });
+
+    socket.on('disconnect', function (err, data) {
+        socket.get('user', function(err, user) {
+            client.SREM('room:1', user);
+            publisher.publish('channel:room:1', 'update-userlist');
+        });
+    });
+
 });
 
 app.get('/', function(req, res) {
@@ -124,6 +149,16 @@ app.get('/room', requiresLogin, function(req, res) {
 app.get('/messages', function(req, res) {
     Message.find({}, {user:1, body:1, _id: 0}, function(err, doc) {
         res.send(doc);
+    });
+});
+
+app.get('/users', function(req, res) {
+    client.SMEMBERS("room:1", function (err, data) {
+        var response = [];
+        data.forEach(function (item) {
+            response.push({name: item});
+        });
+        res.send(response);
     });
 });
 

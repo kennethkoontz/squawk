@@ -14,17 +14,27 @@ ko.bindingHandlers.addOnEnter = {
     }
 };
 
-
 $(document).ready(function () {
     function Squawk(data) {
         this.email = ko.observable(data.user);
         this.message = ko.observable(data.body); 
     }
 
+    function User(data) {
+        this.name = ko.observable(data.name);
+    }
+
     function squawkModel() {
         var self = this;
+        self.users = ko.observableArray([]);
         self.squawks = ko.observableArray([]);
         self.messageToAdd = ko.observable("");
+
+        self.updateUser = function(data) {
+            self.users.removeAll()
+            var mappedMessages = $.map(data, function(item) { return new User(item) });
+            self.users(mappedMessages);
+        }
 
         self.addSquawk = function () {
             var email = $('#email').val();
@@ -48,12 +58,21 @@ $(document).ready(function () {
             var mappedMessages = $.map(allData, function(item) { return new Squawk(item) });
             self.squawks(mappedMessages);
         });    
+
     }
     var squawk = new squawkModel();
-
-    socket.on('message', function(data) {
-        squawk.updateSquawk(JSON.parse(data));
-    });
     
     ko.applyBindings(squawk);
+
+    socket.on('connect', function () {
+        socket.emit('set name', $('#email').val());
+
+        socket.on('message', function(data) {
+            squawk.updateSquawk(JSON.parse(data));
+        });
+        
+        socket.on('update-userlist', function(data) {
+            squawk.updateUser(data);
+        });
+    });
 });

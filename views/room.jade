@@ -2,7 +2,10 @@ include layout
 .container
   .row
     .span3
-      h3 whos here
+      div 
+        h3 whos here
+      div(data-bind="foreach: users")
+        p(data-bind="text: name")
     .span13
       div
         h3 current room <small>room description</small
