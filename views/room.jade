@@ -13,7 +13,7 @@ include layout
         table
           tbody(data-bind="foreach: squawks")
             tr    
-              td
+              td(style="width: 1px;")
                 div(data-bind="text: email")
               td
                 div(data-bind="text: message").message-body
