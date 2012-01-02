@@ -87,7 +87,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('message', function (data) {
-        publisher.publish('channel:room:1', data);
         // Save to Mongo Database.
         var json = JSON.parse(data);
         var m = {
@@ -95,10 +94,17 @@ io.sockets.on('connection', function (socket) {
             body: json.message
         }
         message = new Message(m);
-        message.save(function (err) {
+        message.save(function (err, doc) {
+            // If there is an error with saving to Mongo. Log this. Else
+            // publish message.
             if (err) {
                 console.log(err);
             }
+            var savedMessage = {};
+            savedMessage.user = doc.user;
+            savedMessage.body = doc.body;
+            savedMessage.createdDate = new Date(doc.createdDate).toISOString();
+            publisher.publish('channel:room:1', JSON.stringify(savedMessage));
         });
     });
 
@@ -147,7 +153,7 @@ app.get('/room', requiresLogin, function(req, res) {
 });
 
 app.get('/messages', function(req, res) {
-    Message.find({}, {user:1, body:1, _id: 0}, function(err, doc) {
+    Message.find({}, {user:1, body:1, createdDate: 1, _id: 0}, function(err, doc) {
         res.send(doc);
     });
 });

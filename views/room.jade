@@ -12,6 +12,9 @@ include layout
       div
         table
           tbody(data-bind="foreach: squawks")
+            tr
+              td
+                div(data-bind="text: timestamp") 
             tr    
               td(style="width: 1px;")
                 div(data-bind="text: email")

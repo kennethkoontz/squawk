@@ -18,6 +18,7 @@ $(document).ready(function () {
     function Squawk(data) {
         this.email = ko.observable(data.user);
         this.message = ko.observable(data.body); 
+        this.timestamp = ko.observable(squawk.convertTime(data.createdDate));
     }
 
     function User(data) {
@@ -36,6 +37,16 @@ $(document).ready(function () {
             self.users(mappedMessages);
         }
 
+        self.convertTime = function(data) {
+            // Convert the time from UTC to local.
+            var d = new Date(data);
+            var h = d.getHours();
+            var meridian = (h>=12)?'pm':'am';
+            h = ((h%12 === 0)?12:0) + (h >= 12?h%12:h)
+            var m = d.getMinutes(); 
+            return h + ':' + m + ' ' + meridian;
+        }
+
         self.addSquawk = function () {
             var email = $('#email').val();
             var message = self.messageToAdd();
@@ -50,7 +61,7 @@ $(document).ready(function () {
         };
 
         self.updateSquawk = function(data) {
-            self.squawks.push({email: data.email, message: data.message});
+            self.squawks.push(new Squawk(data));
             self.messageToAdd("");
         };
 
