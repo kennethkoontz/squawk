@@ -63,7 +63,6 @@ $(document).ready(function () {
 
         self.updateSquawk = function(data) {
             self.squawks.push(new Squawk(data));
-            self.messageToAdd("");
         };
 
         $.getJSON("/messages", function(allData) {
