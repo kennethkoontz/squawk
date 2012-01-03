@@ -89,22 +89,24 @@ io.sockets.on('connection', function (socket) {
     socket.on('message', function (data) {
         // Save to Mongo Database.
         var json = JSON.parse(data);
-        var m = {
-            user: json.email,
-            body: json.message
-        }
-        message = new Message(m);
-        message.save(function (err, doc) {
-            // If there is an error with saving to Mongo. Log this. Else
-            // publish message.
-            if (err) {
-                console.log(err);
+        User.find({email: json.email}, {firstName: 1, lastName: 1}, function (err, doc) {
+            var m = {
+                user: doc[0].firstName + ' ' + doc[0].lastName[0] + '.',
+                body: json.message
             }
-            var savedMessage = {};
-            savedMessage.user = doc.user;
-            savedMessage.body = doc.body;
-            savedMessage.createdDate = new Date(doc.createdDate).toISOString();
-            publisher.publish('channel:room:1', JSON.stringify(savedMessage));
+            message = new Message(m);
+            message.save(function (err, doc) {
+                // If there is an error with saving to Mongo. Log this. Else
+                // publish message.
+                if (err) {
+                    console.log(err);
+                }
+                var savedMessage = {};
+                savedMessage.user = doc.user;
+                savedMessage.body = doc.body;
+                savedMessage.createdDate = new Date(doc.createdDate).toISOString();
+                publisher.publish('channel:room:1', JSON.stringify(savedMessage));
+            });
         });
     });
 
@@ -155,16 +157,6 @@ app.get('/room', requiresLogin, function(req, res) {
 app.get('/messages', function(req, res) {
     Message.find({}, {user:1, body:1, createdDate: 1, _id: 0}, function(err, doc) {
         res.send(doc);
-    });
-});
-
-app.get('/users', function(req, res) {
-    client.SMEMBERS("room:1", function (err, data) {
-        var response = [];
-        data.forEach(function (item) {
-            response.push({name: item});
-        });
-        res.send(response);
     });
 });
 

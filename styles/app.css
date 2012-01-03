@@ -32,6 +32,12 @@ table.user {
     word-wrap: break-word;
 }
 
+.messages {
+    background-color: white;
+}
+.userlist {
+    background-color: white;
+}
 .small {
     font-size: 10px;
     color: #BFBFBF;
