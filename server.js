@@ -112,10 +112,14 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('set name', function (name) {
         User.find({email: name}, function (err, doc) {
-            var name = doc[0].firstName + ' ' + doc[0].lastName[0] + '.';
-            client.SADD('room:1', name, redis.print);
-            socket.set('user', name)
-            publisher.publish('channel:room:1', 'update-userlist');
+            if (err) {
+                console.log(err);
+            } else {
+                var name = doc[0].firstName + ' ' + doc[0].lastName[0] + '.';
+                client.SADD('room:1', name, redis.print);
+                socket.set('user', name)
+                publisher.publish('channel:room:1', 'update-userlist');
+            }
         });
     });
 
