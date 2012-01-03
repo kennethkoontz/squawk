@@ -44,6 +44,7 @@ $(document).ready(function () {
             var meridian = (h>=12)?'pm':'am';
             h = ((h%12 === 0)?12:0) + (h >= 12?h%12:h)
             var m = d.getMinutes(); 
+            m = (m < 10)?'0'+m:m
             return h + ':' + m + ' ' + meridian;
         }
 
