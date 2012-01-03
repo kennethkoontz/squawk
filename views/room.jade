@@ -11,15 +11,19 @@ include layout
         h3 current room <small>room description</small
       div
         table
-          tbody(data-bind="foreach: squawks")
-            tr
-              td
-                div(data-bind="text: timestamp") 
-            tr    
-              td(style="width: 1px;")
-                div(data-bind="text: email")
-              td
-                div(data-bind="text: message").message-body
+            tbody(data-bind="foreach: squawks")
+              tr
+                td(style="padding: 2px; width: 1px;")
+                  table.user
+                    tbody
+                      tr    
+                        td
+                          div(data-bind="text: email")
+                      tr
+                        td
+                          .small(data-bind="text: timestamp") 
+                td(style="padding: 2px 10px")
+                  div(data-bind="text: message").message-body
       div
         p
           textarea.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")

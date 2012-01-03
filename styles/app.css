@@ -9,6 +9,18 @@ textarea.send-message {
     height: 60px;
 }
 
+table.user {
+    border-collapse: collapse;
+    margin: 0px;
+}
+
+.user td {
+    text-align: right;
+    width: 1px;
+    padding: 0px;
+    border: none;
+}
+
 .space {
     height: 100px;
 }
@@ -18,4 +30,9 @@ textarea.send-message {
 
 .message-body {
     word-wrap: break-word;
+}
+
+.small {
+    font-size: 10px;
+    color: #BFBFBF;
 }
