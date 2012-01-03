@@ -120,9 +120,13 @@ io.sockets.on('connection', function (socket) {
                 client.SADD('room:1', name, redis.print);
                 socket.set('user', name)
                 publisher.publish('channel:room:1', 'update-userlist');
-            } catch (e if e instanceof TypeError) {
-                return 
-            }
+            } catch (e) {
+		if (e instanceof TypeError) {
+                    return;
+		} else {
+                    console.log(e);
+                }
+	    }
         });
     });
 
@@ -194,4 +198,4 @@ app.post('/sessions', function(req, res) {
     });
 });
 
-app.listen(8000);
+app.listen(80);
