@@ -15,17 +15,21 @@ table.user {
 }
 
 .user td {
+    font-size: 11px;
     text-align: right;
-    width: 1px;
+    min-width: 100px;
+    max-width: 100px;
     padding: 0px;
     border: none;
 }
+
 
 .space {
     height: 100px;
 }
 
 .user-body {
+    font-weight: bold;
 }
 
 .message-body {
