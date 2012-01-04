@@ -36,6 +36,17 @@ table.user {
     word-wrap: break-word;
 }
 
+.userlist-wrapper {
+    position: fixed;
+}
+
+.send-message-wrapper {
+    position: fixed;
+    bottom: 0px;
+    z-index: 1001;
+    background-color: #EEE
+}
+
 .messages {
     background-color: white;
 }
