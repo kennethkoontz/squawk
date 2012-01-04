@@ -48,6 +48,21 @@ $(document).ready(function () {
             return h + ':' + m + ' ' + meridian;
         }
 
+        self.parseForLinks = function (data) {
+            // Parse the text for links.
+            var re = /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z0-9+&@#\/%=~_|])/ig;
+	    var matchedArray  = data.match(re);
+            if (matchedArray) {
+                $.each(matchedArray, function (i, v) {
+                    var link = "<a href='" + v + "' target='_blank'>" + v + "</a>";
+                    d = data.replace(v, link);      
+                });
+                return d;
+            } else {
+                return data;
+            }
+        }
+
         self.addSquawk = function () {
             var email = $('#email').val();
             var message = self.messageToAdd();
@@ -62,12 +77,16 @@ $(document).ready(function () {
         };
 
         self.updateSquawk = function(data) {
+	    data.body = squawk.parseForLinks(data.body);
             self.squawks.unshift(new Squawk(data));
         };
 
         $.getJSON("/messages", function(allData) {
             allData.reverse()
-            var mappedMessages = $.map(allData, function(item) { return new Squawk(item) });
+            var mappedMessages = $.map(allData, function(item) {
+                item.body = squawk.parseForLinks(item.body);
+                return new Squawk(item)
+            });
             self.squawks(mappedMessages);
         });    
 

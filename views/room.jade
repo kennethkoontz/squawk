@@ -24,7 +24,7 @@ include layout
                         td
                           .small(data-bind="text: timestamp") 
                 td(style="padding: 2px 10px")
-                  div(data-bind="text: message").message-body
+                  div(data-bind="html: message").message-body
       .span13.send-message-wrapper
         p
           textarea.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")
