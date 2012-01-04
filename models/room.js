@@ -62,10 +62,11 @@ $(document).ready(function () {
         };
 
         self.updateSquawk = function(data) {
-            self.squawks.push(new Squawk(data));
+            self.squawks.unshift(new Squawk(data));
         };
 
         $.getJSON("/messages", function(allData) {
+            allData.reverse()
             var mappedMessages = $.map(allData, function(item) { return new Squawk(item) });
             self.squawks(mappedMessages);
         });    
