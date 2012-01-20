@@ -170,9 +170,11 @@ app.get('/room', requiresLogin, function(req, res) {
 });
 
 app.get('/messages', function(req, res) {
+    // Construct start and end date objects to be used with query.
     var today = new Date();
     var start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     var end = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1);
+
     Message.find({createdDate: {$gte: start, $lt: end}}, {user:1, body:1, createdDate: 1, _id: 0}, function(err, doc) {
         res.send(doc);
     });
