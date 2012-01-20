@@ -2,6 +2,12 @@
   .topbar-inner
     .container
       a.brand(href="#") squawk
+      ul
+        li
+          a Starred
+        li
+          form
+            input(type="text", placeholder="search for a message...")
       - if (session.user || request.url === '/sessions')
         .pull-right
           ul.nav
