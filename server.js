@@ -166,7 +166,8 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/room', requiresLogin, function(req, res) {
-    res.render('room');
+    var today = new Date();
+    res.render('room', {date: (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear()});
 });
 
 app.get('/messages', function(req, res) {

@@ -8,9 +8,10 @@ include layout
         div(data-bind="foreach: users")
           p(data-bind="text: name")
     .span13
-      div
-        h3 current room <small>room description</small
-      div(style="padding-bottom: 110px")
+      .room-header.span13
+        h3 current room <small>room description</small>
+        .center <strong>#{date}</strong>
+      div(style="padding-bottom: 110px; padding-top: 54px;")
         table
             tbody(data-bind="foreach: squawks")
               tr
@@ -27,6 +28,6 @@ include layout
                   div(data-bind="html: message").message-body
       .span13.send-message-wrapper
         p
-          textarea.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")
+          textarea.span13.send-message(data-bind="value: messageToAdd, valueUpdate: 'afterkeydown', addOnEnter: addSquawk")
         p
           button.btn(data-bind="click: addSquawk") send

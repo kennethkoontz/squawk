@@ -5,7 +5,6 @@ body {
 
 textarea.send-message {
     resize: none;
-    width: 650px;
     height: 60px;
 }
 
@@ -44,16 +43,28 @@ table.user {
     position: fixed;
     bottom: 0px;
     z-index: 1001;
-    background-color: #EEE
+    background-color: #EEE;
 }
 
 .messages {
     background-color: white;
 }
+
 .userlist {
     background-color: white;
 }
+
 .small {
     font-size: 10px;
     color: #BFBFBF;
+}
+
+.room-header {
+    position: fixed;
+    top: 40px;
+    z-index: 1001;
+    background-color: #EEE;
+}
+.center {
+    text-align: center;
 }
