@@ -1,7 +1,6 @@
 var app = require('express').createServer()
   , auth = require('./auth')
   , express = require('express')
-  , jade = require('jade')
   , redis = require("redis")
   , mongoose = require('mongoose').connect('localhost', 'squawk', '27017')
   , io = require('socket.io').listen(app)
