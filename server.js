@@ -1,4 +1,5 @@
 var app = require('express').createServer()
+  , moment = require('moment')
   , auth = require('./auth')
   , express = require('express')
   , redis = require("redis")
@@ -165,8 +166,17 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/room', requiresLogin, function(req, res) {
-    var today = new Date();
-    res.render('room', {date: (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear()});
+    var today = new moment();
+    res.render('room', {date: today.format("dddd, MMMM D YYYY")});
+});
+
+app.get('/room/archive/:month/:day/:year', requiresLogin, function(req, res) {
+    var day = new moment(new Date(req.params.year, parseInt(req.params.month) - 1, req.params.day));
+    var nextDay = new moment(new Date(req.params.year, parseInt(req.params.month) - 1, parseInt(req.params.day)+1));
+
+    Message.find({createdDate: {$gte: day, $lt: nextDay}}, {user:1, body:1, createdDate: 1, _id: 0}, function(err, doc) {
+        res.render('archive', {date: day.format("dddd, MMMM D YYYY"), messages: doc});
+    });
 });
 
 app.get('/messages', function(req, res) {

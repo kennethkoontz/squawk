@@ -1,0 +1,30 @@
+include layout
+script(type="text/javascript", src="/models/archive.js")
+.container
+  .row
+    .span3
+      div 
+        h3 who was here
+    .span13 
+      div
+        h3#archived-date <span class="archived-date">#{date}</span> <small><a href='/room'>back to today</a></small>
+        a#back-date(href="") back
+        span.ahead-date
+          span \ | 
+          a#ahead-date(href="") ahead
+      div
+        table
+            tbody
+            - for (var i in messages)
+              tr
+                td(style="padding: 2px; width: 1px;")
+                  table.user
+                    tbody
+                      tr    
+                        td
+                          .user-body= messages[i].user
+                      tr
+                        td
+                          .timestamp.small= messages[i].createdDate
+                td.message-body
+                  .message-body= messages[i].body

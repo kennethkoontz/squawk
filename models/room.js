@@ -15,6 +15,16 @@ ko.bindingHandlers.addOnEnter = {
 };
 
 $(document).ready(function () {
+    (function setYesterdayLink() {
+        var todaysDate = new moment($('.todays-date').html());
+        var backDate = todaysDate.subtract('days', 1);
+        var backDateArray = [parseInt(backDate.month()) + 1,
+                             backDate.date(),
+                             backDate.year()];
+        var backDateLink = '/room/archive/' + backDateArray.join('/');
+        $('.yesterday').attr('href', backDateLink);
+    })();
+
     function Squawk(data) {
         this.email = ko.observable(data.user);
         this.message = ko.observable(data.body); 
@@ -51,7 +61,7 @@ $(document).ready(function () {
         self.parseForLinks = function (data) {
             // Parse the text for links.
             var re = /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z0-9+&@#\/%=~_|])/ig;
-	    var matchedArray  = data.match(re);
+	        var matchedArray  = data.match(re);
             if (matchedArray) {
                 $.each(matchedArray, function (i, v) {
                     var link = "<a href='" + v + "' target='_blank'>" + v + "</a>";

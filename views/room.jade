@@ -1,16 +1,19 @@
 include layout
+script(type="text/javascript", src="/models/room.js")
 .container
   .row
     .span3(style="height: 1px")
       .span3.userlist-wrapper
         div 
-          h3 whos here
+          h3 who is here
         div(data-bind="foreach: users")
           p(data-bind="text: name")
     .span13
       .room-header.span13
         h3 current room <small>room description</small>
-        .center <strong>#{date}</strong>
+        .center
+          a.yesterday(href='/room/archive/1/21/2012') yesterday
+          <strong> | <span class='todays-date'>#{date}</span></strong>
       div(style="padding-bottom: 110px; padding-top: 54px;")
         table
             tbody(data-bind="foreach: squawks")
