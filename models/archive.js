@@ -26,7 +26,7 @@ $(document).ready(function () {
 
     $('.timestamp').each(function() {
         var time = new moment($(this).html());
-        $(this).html(time.format('h:m a'));
+        $(this).html(time.format('h:mm a'));
     });
 
 });
