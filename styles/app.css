@@ -3,6 +3,32 @@ body {
     background-color: #eee;
 }
 
+span.star.not-starred {
+    height: 15px;
+    width: 15px;
+    display: block;
+    background-image: url('/star.gif');
+    background-repeat: no-repeat;
+}
+
+span.star.hover {
+    height: 15px;
+    display: block;
+    background-image: url('/star.gif');
+    background-repeat: no-repeat;
+    background-position:0 -33px;
+}
+
+
+span.star.starred{
+    height: 15px;
+    width: 15px;
+    display: block;
+    background-image: url('/star.gif');
+    background-repeat: no-repeat;
+    background-position:0 -33px;
+}
+
 textarea.send-message {
     resize: none;
     height: 60px;

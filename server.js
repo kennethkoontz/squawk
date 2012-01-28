@@ -1,4 +1,5 @@
 var app = require('express').createServer()
+  , us = require('underscore')
   , moment = require('moment')
   , auth = require('./auth')
   , express = require('express')
@@ -26,6 +27,8 @@ var MessageModel = new Schema({
   , createdDate: { type: Date, default: Date.now }
   , user: String
   , body: String
+  , stars: [String]
+  , starred: Boolean
 });
 
 var User = mongoose.model('user', UserModel);
@@ -105,6 +108,7 @@ io.sockets.on('connection', function (socket) {
                 var savedMessage = {};
                 savedMessage.user = doc.user;
                 savedMessage.body = doc.body;
+                savedMessage._id = doc._id;
                 savedMessage.createdDate = new Date(doc.createdDate).toISOString();
                 publisher.publish('channel:room:1', JSON.stringify(savedMessage));
             });
@@ -185,9 +189,40 @@ app.get('/messages', function(req, res) {
     var start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     var end = new Date(today.getFullYear(), today.getMonth(), today.getDate()+1);
 
-    Message.find({createdDate: {$gte: start, $lt: end}}, {user:1, body:1, createdDate: 1, _id: 0}, function(err, doc) {
+    Message.find({createdDate: {$gte: start, $lt: end}}, {user:1, body:1, stars:1, starred: 1, createdDate: 1}, function(err, doc) {
+        doc.forEach(function(e, i) {
+            if (us.indexOf(e.stars, req.session.user) !== -1) {
+                doc[i].starred = true;
+            } else {
+                doc[i].starred = false;
+            }
+        });
         res.send(doc);
     });
+});
+
+app.get('/star/message/:id', function(req, res) {
+    Message.findOne({_id: req.params.id}, {stars:1}, function(err, doc) {
+        console.log(doc.stars);
+        if (us.indexOf(doc.stars, req.session.user) !== -1) {
+            // remove record
+            doc.stars.remove(req.session.user);
+            doc.save(function (err) {
+                if (err) {
+                    console.log('There was a problem with saving: ' + doc);
+                }
+            });
+        } else {
+            // add record
+            doc.stars.push(req.session.user);
+            doc.save(function (err) {
+                if (err) {
+                    console.log('There was a problem with saving: ' + doc);
+                }
+            });
+        }
+    });
+    res.send('starring');
 });
 
 /* Sessions */

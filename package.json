@@ -11,5 +11,6 @@
   , "socket.io": "*"
   , "connect-redis": "*"
   , "jade": "*"
-  , "moment": "*"}
+  , "moment": "*"
+  , "underscore": "*"}
 }

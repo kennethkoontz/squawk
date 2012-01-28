@@ -14,6 +14,38 @@ ko.bindingHandlers.addOnEnter = {
     }
 };
 
+ko.bindingHandlers.star = {
+    init: function(element, valueAccessor) {
+        $(element).hover(
+            function() { $(this).addClass("hover") },
+            function() { $(this).removeClass("hover") }                
+        ).click(function() {
+            var observable = valueAccessor();
+            var id = $(element).attr('id');
+            if (ko.utils.unwrapObservable(valueAccessor()) === true) {
+                $.getJSON("/star/message/"+id, function(data) {
+                    console.log(data);
+                });    
+                observable(false);
+            } else {
+                $.getJSON("/star/message/"+id, function(data) {
+                    console.log(data);
+                });    
+                observable(true);
+            }
+        });
+    },
+    update: function(element, valueAccessor) {
+        if (ko.utils.unwrapObservable(valueAccessor()) === true) {
+            $(element).removeClass("not-starred");
+            $(element).addClass("starred");
+        } else {
+            $(element).removeClass("starred");
+            $(element).addClass("not-starred");
+        }
+    }    
+};
+
 $(document).ready(function () {
     (function setYesterdayLink() {
         var todaysDate = new moment($('.todays-date').html());
@@ -26,9 +58,11 @@ $(document).ready(function () {
     })();
 
     function Squawk(data) {
+        this.starred = ko.observable(data.starred);
         this.email = ko.observable(data.user);
         this.message = ko.observable(data.body); 
-        this.timestamp = ko.observable(squawk.convertTime(data.createdDate));
+        this.timestamp = squawk.convertTime(data.createdDate);
+        this.messageId = data._id;
     }
 
     function User(data) {
@@ -37,6 +71,7 @@ $(document).ready(function () {
 
     function squawkModel() {
         var self = this;
+        self.starred = ko.observable();
         self.users = ko.observableArray([]);
         self.squawks = ko.observableArray([]);
         self.messageToAdd = ko.observable("");
@@ -87,12 +122,13 @@ $(document).ready(function () {
         };
 
         self.updateSquawk = function(data) {
-	    data.body = squawk.parseForLinks(data.body);
+            console.log(data);
+	        data.body = squawk.parseForLinks(data.body);
             self.squawks.unshift(new Squawk(data));
         };
 
         $.getJSON("/messages", function(allData) {
-            allData.reverse()
+            allData.reverse();
             var mappedMessages = $.map(allData, function(item) {
                 item.body = squawk.parseForLinks(item.body);
                 return new Squawk(item)

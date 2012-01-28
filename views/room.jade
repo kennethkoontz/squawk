@@ -1,5 +1,6 @@
 include layout
 script(type="text/javascript", src="/models/room.js")
+script(type="text/javascript", src="/javascripts/rating.js")
 .container
   .row
     .span3(style="height: 1px")
@@ -13,7 +14,8 @@ script(type="text/javascript", src="/models/room.js")
         h3 current room <small>room description</small>
         .center
           a.yesterday(href='/room/archive/1/21/2012') yesterday
-          <strong> | <span class='todays-date'>#{date}</span></strong>
+          strong \ | 
+            span.todays-date#{date}
       div(style="padding-bottom: 110px; padding-top: 54px;")
         table
             tbody(data-bind="foreach: squawks")
@@ -26,7 +28,9 @@ script(type="text/javascript", src="/models/room.js")
                           .user-body(data-bind="text: email")
                       tr
                         td
-                          .small(data-bind="text: timestamp") 
+                          div
+                            span.small(data-bind="text: timestamp")
+                            span.star(data-bind="star: starred, attr: {'id': messageId}")
                 td.message-body
                   div(data-bind="html: message").message-body
       .span13.send-message-wrapper
