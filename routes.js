@@ -1,4 +1,7 @@
 var auth = require('./auth'),
+    User = require('./models').User,
+    Message = require('./models').Message;
+    us = require('underscore'),
     moment = require('moment');
 
 function requiresLogin(req, res, next) {
@@ -10,6 +13,22 @@ function requiresLogin(req, res, next) {
 };
 
 var routes = function(app) {
+    app.dynamicHelpers(
+        {
+            session: function(req, res) {
+                return req.session;
+            },
+    
+            request: function(req, res) {
+                return req;
+            },
+    
+            flash: function(req, res) {
+                return req.flash();
+            },
+        }
+    );
+
     app.get('/', function(req, res) {
         res.render('register');
     });

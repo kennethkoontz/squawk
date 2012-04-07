@@ -1,5 +1,4 @@
 var app = require('express').createServer(),
-    us = require('underscore'),
     express = require('express'),
     redis = require("redis"),
     io = require('socket.io').listen(app),
@@ -8,8 +7,7 @@ var app = require('express').createServer(),
     subscriber = redis.createClient(),
     RedisStore = require('connect-redis')(express),
     User = require('./models').User,
-    Message = require('./models').Message,
-    routes = require('./routes')(app);
+    Message = require('./models').Message;
 
 app.set("view engine", "jade");
 app.set("view options", { layout: false });
@@ -22,26 +20,11 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({ secret: 'secretpassword', store: new RedisStore}));
 
-app.dynamicHelpers(
-    {
-        session: function(req, res) {
-            return req.session;
-        },
-
-        request: function(req, res) {
-            return req;
-        },
-
-        flash: function(req, res) {
-            return req.flash();
-        },
-    }
-);
+var routes = require('./routes')(app);
 
 client.on("error", function (err) {
     console.log("Error " + err);
 });
-
 
 io.sockets.on('connection', function (socket) {
     subscriber.psubscribe('channel:room:1');
