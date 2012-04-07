@@ -145,8 +145,8 @@ io.sockets.on('connection', function (socket) {
 });
 
 // -- Routes -- 
-
-require('./routes');
+var routes = require('./routes');
+routes(app);
 
 
 app.listen(8000);
