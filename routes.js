@@ -1,3 +1,14 @@
+var auth = require('./auth'),
+    moment = require('moment');
+
+function requiresLogin(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/sessions/new?redir=' + req.url);
+    }
+};
+
 var routes = function(app) {
     app.get('/', function(req, res) {
         res.render('register');
@@ -105,4 +116,4 @@ var routes = function(app) {
     });
 }
 
-exports.routes = routes;
+module.exports = routes;
