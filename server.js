@@ -12,10 +12,10 @@ var app = require('express').createServer(),
 app.set("view engine", "jade");
 app.set("view options", { layout: false });
 app.register(".jade", require("jade").express);
-app.use("/javascripts", express.static(__dirname + '/javascripts'));
-app.use("/styles", express.static(__dirname + '/styles'));
+app.use("/javascripts", express.static(__dirname + '/static/javascripts'));
+app.use("/styles", express.static(__dirname + '/static/stylesheets'));
 app.use("/models", express.static(__dirname + '/models'));
-app.use("/", express.static(__dirname + "/images"));
+app.use("/", express.static(__dirname + "/static/images"));
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({ secret: 'secretpassword', store: new RedisStore}));
